@@ -44,16 +44,16 @@ public class TuneCassandra extends Task
     public void execute() throws IOException
     {
     	boolean isDone = false;
-    	
+
     	while (!isDone) {
     	  try {
               tuner.writeAllProperties(config.getYamlLocation(), null, config.getSeedProviderName());
               isDone = true;
     	   } catch (IOException e) {
-    		  LOGGER.info("Failed writing cassandra.yml file:" + e.getMessage());
+    		  LOGGER.info("Failed writing cassandra.yaml file:" + e.getMessage());
     	   }
     	}
-    	
+
     }
 
     @Override

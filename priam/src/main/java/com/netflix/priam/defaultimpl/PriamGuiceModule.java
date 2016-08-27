@@ -15,6 +15,7 @@
  */
 package com.netflix.priam.defaultimpl;
 
+import com.netflix.priam.aws.IAMCredential;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -56,17 +57,19 @@ public class PriamGuiceModule extends AbstractModule
         bind(IBackupFileSystem.class).annotatedWith(Names.named("encryptedbackup")).to(S3EncryptedFileSystem.class);
         bind(IBackupFileSystem.class).annotatedWith(Names.named("incr_restore")).to(S3FileSystem.class);
         bind(IBackupFileSystem.class).annotatedWith(Names.named("backup_status")).to(S3FileSystem.class);
-        
+
         bind(S3CrossAccountFileSystem.class);
         bind(IFileSystemContext.class).annotatedWith(Names.named("backup")).to(BackupFileSystemContext.class);
-        
+
         bind(IBackupFileSystem.class).annotatedWith(Names.named("gcsencryptedbackup")).to(GoogleEncryptedFileSystem.class);
         bind(IS3Credential.class).annotatedWith(Names.named("awsroleassumption")).to(S3RoleAssumptionCredential.class);
         bind(IFileCryptography.class).annotatedWith(Names.named("filecryptoalgorithm")).to(PgpCryptography.class);
         bind(ICredentialGeneric.class).annotatedWith(Names.named("gcscredential")).to(GcsCredential.class);
         bind(ICredentialGeneric.class).annotatedWith(Names.named("pgpcredential")).to(PgpCredential.class);
         bind(IRestoreStrategy.class).annotatedWith(Names.named("encryptedrestore")).to(EncryptedRestoreStrategy.class);
-        bind(ICredential.class).to(ClearCredential.class);
+        //bind(ICredential.class).to(ClearCredential.class);
+        // Use IAM instance credentials
+        bind(ICredential.class).to(IAMCredential.class);
         bind(IDeadTokenRetriever.class).to(DeadTokenRetriever.class);
         bind(IPreGeneratedTokenRetriever.class).to(PreGeneratedTokenRetriever.class);
         bind(INewTokenRetriever.class).to(NewTokenRetriever.class);
